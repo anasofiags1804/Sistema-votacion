@@ -1,43 +1,47 @@
-# sistema.py
 import json
 from datetime import datetime
 
 votos = {}
+CANDIDATOS = ["Abelardo de la Espriella", "Gustavo Petro", "Alvaro Uribe", "Mafe Carrascal"]
 
-def registrar_voto(persona, candidato):
-    # Se revisa si la persona ya voto antes usando el diccionario
+def mostrar_candidatos():
+    print("\nCandidatos disponibles:")
+    for i, candidato in enumerate(CANDIDATOS, start=1):
+        print(f"{i}. {candidato}")
+
+def registrar_voto():
+    persona = input("\nNombre de la persona que va a votar: ")
     if persona in votos:
         print(persona, "ya voto. No puede votar de nuevo.")
         return
 
-    # Si no ha votado, se guarda el nuevo voto en el diccionario
+    mostrar_candidatos()
+    opcion = input("Elige el numero del candidato: ")
+
+    if not opcion.isdigit() or not (1 <= int(opcion) <= len(CANDIDATOS)):
+        print("Opcion invalida.")
+        return
+
+    candidato = CANDIDATOS[int(opcion) - 1]
     votos[persona] = candidato
     print("Voto registrado:", persona, "voto por", candidato)
+    print("Voto registrado correctamente!")
 
 def ver_resultados():
     if not votos:
         print("Aun no hay votos registrados.")
         return
-    
-    conteos = {}
+
+    conteos = {candidato: 0 for candidato in CANDIDATOS}
     for candidato in votos.values():
-        conteos[candidato] = conteos.get(candidato, 0) + 1
+        conteos[candidato] += 1
 
     total = len(votos)
-    print("\nResultados de la votación:")
+    print("\nResultados de la votacion:")
     for candidato, cantidad in conteos.items():
-        porcentaje = (cantidad / total) * 100
+        porcentaje = (cantidad / total) * 100 if total else 0
         print(f"{candidato}: {cantidad} votos ({porcentaje:.1f}%)")
     print(f"Total de votantes: {total}")
-
-def reiniciar_votacion():
-    if votos:
-        guardar_historial()
-        votos.clear()
-        print("Votación reiniciada. Todos los votos anteriores han sido guardados en el historial.")
-    else:
-        print("No hay votos para reiniciar.")
-
 
 def guardar_historial():
     registro = {
@@ -47,7 +51,6 @@ def guardar_historial():
 
     try:
         with open("historial_votacion.json", "r") as archivo:
-            json.dump(registro, archivo)
             historial = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         historial = []
@@ -57,21 +60,35 @@ def guardar_historial():
     with open("historial_votacion.json", "w") as archivo:
         json.dump(historial, archivo, indent=4)
 
+def reiniciar_votacion():
+    if votos:
+        guardar_historial()
+        votos.clear()
+        print("Votacion reiniciada. Los votos anteriores se guardaron en el historial.")
+    else:
+        print("No hay votos para reiniciar.")
+
+def mostrar_menu():
+    print("\n--- Sistema de Votacion ---")
+    print("1. Votar")
+    print("2. Ver resultados")
+    print("3. Reiniciar votacion")
+    print("4. Salir")
 
 while True:
-    nombre = input("Nombre de la persona (o 'salir' para terminar): ")
+    mostrar_menu()
+    opcion = input("Elige una opcion: ")
 
-    if nombre == "salir":
-        break
-
-    if nombre == "resultados":
+    if opcion == "1":
+        registrar_voto()
+    elif opcion == "2":
         ver_resultados()
-        continue
-
-    if nombre == "reiniciar":
+    elif opcion == "3":
         reiniciar_votacion()
-        continue
-    
-    candidato = input("Por quien vota " + nombre + "?: ")
-    registrar_voto(nombre, candidato)
-
+    elif opcion == "4":
+        if votos:
+            guardar_historial()
+        print("Sistema finalizado.")
+        break
+    else:
+        print("Opcion invalida.")
