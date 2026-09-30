@@ -1,8 +1,15 @@
 import json
+import os
 from datetime import datetime
 
 votos = {}
 CANDIDATOS = ["Abelardo de la Espriella", "Gustavo Petro", "Alvaro Uribe", "Mafe Carrascal"]
+
+def limpiar_pantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def pausar():
+    input("\nPresiona Enter para continuar...")
 
 def mostrar_candidatos():
     print("\nCandidatos disponibles:")
@@ -76,15 +83,23 @@ def mostrar_menu():
     print("4. Salir")
 
 while True:
+    limpiar_pantalla()
     mostrar_menu()
     opcion = input("Elige una opcion: ")
 
+    limpiar_pantalla()
     if opcion == "1":
         registrar_voto()
+        pausar()
+
     elif opcion == "2":
         ver_resultados()
+        pausar()
+
     elif opcion == "3":
         reiniciar_votacion()
+        pausar()
+        
     elif opcion == "4":
         if votos:
             guardar_historial()
