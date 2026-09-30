@@ -23,5 +23,16 @@
         "votos": {
             "Ana": "Gustavo Petro"
         }
+    },
+    {
+        "fecha": "2026-09-30 15:00:47",
+        "votos": {
+            "Jairo": "Gustavo Petro",
+            "Sofia": "Alvaro Uribe",
+            "Gina": "Abelardo de la Espriella",
+            "Olga": "Alvaro Uribe",
+            "Alejandra": "Mafe Carrascal",
+            "Elvin": "Mafe Carrascal"
+        }
     }
 ]
